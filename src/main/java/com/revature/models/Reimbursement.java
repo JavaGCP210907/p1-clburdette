@@ -10,7 +10,7 @@ public class Reimbursement {
 	private Date REIMB_RESOLVED;
 	private String REIMB_DESCRIPTION;
 	private String REIMB_RECEIPT;
-	private int REIMB_AUHTOR;
+	private int REIMB_AUTHOR;
 	private int REIMB_RESOLVER;
 	private int REIMB_STATUS_ID;
 	private int REIMB_TYPE_ID;
@@ -21,21 +21,21 @@ public class Reimbursement {
 	}
 
 	public Reimbursement(double rEIMB_AMOUNT, Date rEIMB_SUBMITTED, Date rEIMB_RESOLVED, String rEIMB_DESCRIPTION,
-			String rEIMB_RECEIPT, int rEIMB_AUHTOR, int rEIMB_RESOLVER, int rEIMB_STATUS_ID, int rEIMB_TYPE_ID) {
+			String rEIMB_RECEIPT, int rEIMB_AUTHOR, int rEIMB_RESOLVER, int rEIMB_STATUS_ID, int rEIMB_TYPE_ID) {
 		super();
 		REIMB_AMOUNT = rEIMB_AMOUNT;
 		REIMB_SUBMITTED = rEIMB_SUBMITTED;
 		REIMB_RESOLVED = rEIMB_RESOLVED;
 		REIMB_DESCRIPTION = rEIMB_DESCRIPTION;
 		REIMB_RECEIPT = rEIMB_RECEIPT;
-		REIMB_AUHTOR = rEIMB_AUHTOR;
+		REIMB_AUTHOR = rEIMB_AUTHOR;
 		REIMB_RESOLVER = rEIMB_RESOLVER;
 		REIMB_STATUS_ID = rEIMB_STATUS_ID;
 		REIMB_TYPE_ID = rEIMB_TYPE_ID;
 	}
 
 	public Reimbursement(int rEIMB_ID, double rEIMB_AMOUNT, Date rEIMB_SUBMITTED, Date rEIMB_RESOLVED,
-			String rEIMB_DESCRIPTION, String rEIMB_RECEIPT, int rEIMB_AUHTOR, int rEIMB_RESOLVER, int rEIMB_STATUS_ID,
+			String rEIMB_DESCRIPTION, String rEIMB_RECEIPT, int rEIMB_AUTHOR, int rEIMB_RESOLVER, int rEIMB_STATUS_ID,
 			int rEIMB_TYPE_ID) {
 		super();
 		REIMB_ID = rEIMB_ID;
@@ -44,7 +44,7 @@ public class Reimbursement {
 		REIMB_RESOLVED = rEIMB_RESOLVED;
 		REIMB_DESCRIPTION = rEIMB_DESCRIPTION;
 		REIMB_RECEIPT = rEIMB_RECEIPT;
-		REIMB_AUHTOR = rEIMB_AUHTOR;
+		REIMB_AUTHOR = rEIMB_AUTHOR;
 		REIMB_RESOLVER = rEIMB_RESOLVER;
 		REIMB_STATUS_ID = rEIMB_STATUS_ID;
 		REIMB_TYPE_ID = rEIMB_TYPE_ID;
@@ -54,7 +54,7 @@ public class Reimbursement {
 	public String toString() {
 		return "Reimbursement [REIMB_ID=" + REIMB_ID + ", REIMB_AMOUNT=" + REIMB_AMOUNT + ", REIMB_SUBMITTED="
 				+ REIMB_SUBMITTED + ", REIMB_RESOLVED=" + REIMB_RESOLVED + ", REIMB_DESCRIPTION=" + REIMB_DESCRIPTION
-				+ ", REIMB_RECEIPT=" + REIMB_RECEIPT + ", REIMB_AUHTOR=" + REIMB_AUHTOR + ", REIMB_RESOLVER="
+				+ ", REIMB_RECEIPT=" + REIMB_RECEIPT + ", REIMB_AUHTOR=" + REIMB_AUTHOR + ", REIMB_RESOLVER="
 				+ REIMB_RESOLVER + ", REIMB_STATUS_ID=" + REIMB_STATUS_ID + ", REIMB_TYPE_ID=" + REIMB_TYPE_ID + "]";
 	}
 
@@ -65,7 +65,7 @@ public class Reimbursement {
 		long temp;
 		temp = Double.doubleToLongBits(REIMB_AMOUNT);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + REIMB_AUHTOR;
+		result = prime * result + REIMB_AUTHOR;
 		result = prime * result + ((REIMB_DESCRIPTION == null) ? 0 : REIMB_DESCRIPTION.hashCode());
 		result = prime * result + REIMB_ID;
 		result = prime * result + ((REIMB_RECEIPT == null) ? 0 : REIMB_RECEIPT.hashCode());
@@ -88,7 +88,7 @@ public class Reimbursement {
 		Reimbursement other = (Reimbursement) obj;
 		if (Double.doubleToLongBits(REIMB_AMOUNT) != Double.doubleToLongBits(other.REIMB_AMOUNT))
 			return false;
-		if (REIMB_AUHTOR != other.REIMB_AUHTOR)
+		if (REIMB_AUTHOR != other.REIMB_AUTHOR)
 			return false;
 		if (REIMB_DESCRIPTION == null) {
 			if (other.REIMB_DESCRIPTION != null)
@@ -170,11 +170,11 @@ public class Reimbursement {
 	}
 
 	public int getREIMB_AUHTOR() {
-		return REIMB_AUHTOR;
+		return REIMB_AUTHOR;
 	}
 
 	public void setREIMB_AUHTOR(int rEIMB_AUHTOR) {
-		REIMB_AUHTOR = rEIMB_AUHTOR;
+		REIMB_AUTHOR = rEIMB_AUHTOR;
 	}
 
 	public int getREIMB_RESOLVER() {
