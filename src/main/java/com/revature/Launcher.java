@@ -12,8 +12,7 @@ import io.javalin.Javalin;
 public class Launcher {
 
 	public static void main(String[] args) {
-		ReimbursementController rc = new ReimbursementController();
-		UserController uc = new UserController(); //to get access to the HTTP Handlers in the controller layer
+		ReimbursementController rc = new ReimbursementController(); //to get access to the HTTP Handlers in the controller layer
 		LoginController lc = new LoginController(); 
 		
 		//testing whether our connection works...
