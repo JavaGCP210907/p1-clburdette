@@ -1,7 +1,9 @@
 package com.revature.controllers;
 
 import com.google.gson.Gson;
+import com.revature.daos.UserDao;
 import com.revature.models.LoginDTO;
+import com.revature.models.User;
 import com.revature.services.LoginService;
 import com.revature.utils.JwtUtil;
 
@@ -25,6 +27,10 @@ public class LoginController {
 		
 		if(ls.login(LDTO.getUsername(), LDTO.getPassword())) { //if login is successful...
 			
+			UserDao uDao = new UserDao();
+			User user = uDao.getUserByUserName(LDTO.getUsername());
+			String userToClient = user.toString();
+			
 			//generate a JSON Web Token to uniquely identify the user
 			String jwt = JwtUtil.generate(LDTO.getUsername(), LDTO.getPassword());
 			
@@ -32,6 +38,7 @@ public class LoginController {
 			ctx.req.getSession(); //req is a "Request Object", we establish sessions through it
 			
 			//successful status code 
+
 			ctx.status(200);
 			
 			ctx.result("Login Success! JWT is: " + jwt);
