@@ -169,7 +169,7 @@ public class Reimbursement {
 		REIMB_RECEIPT = rEIMB_RECEIPT;
 	}
 
-	public int getREIMB_AUHTOR() {
+	public int getREIMB_AUTHOR() {
 		return REIMB_AUTHOR;
 	}
 

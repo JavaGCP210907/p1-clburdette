@@ -89,6 +89,7 @@ public class ReimbursementDao implements ReimbursementInterface{
 					rs.getInt("REIMB_TYPE_ID")
 				);
 				
+				
 
 				reimbursementList.add(r);
 			}
@@ -105,13 +106,53 @@ public class ReimbursementDao implements ReimbursementInterface{
 
 	@Override
 	public boolean addReimbursement(Reimbursement reimbursement) {
-		// TODO Auto-generated method stub
+		try(Connection conn = ConnectionUtil.getConnection()){
+			
+			String sql = "INSERT INTO ers_reimbursement" +
+						 "VALUES(?,?,?,?,?,?,?,?,?,?);"; //write out out SQL query
+			
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+			ps.setInt(1, reimbursement.getREIMB_ID());
+			ps.setDouble(2, reimbursement.getREIMB_AMOUNT());
+			ps.setDate(3, reimbursement.getREIMB_SUBMITTED());
+			ps.setDate(4, reimbursement.getREIMB_RESOLVED());
+			ps.setString(5, reimbursement.getREIMB_DESCRIPTION());
+			ps.setString(6, reimbursement.getREIMB_RECEIPT());
+			ps.setInt(7, reimbursement.getREIMB_AUTHOR());
+			ps.setInt(8, reimbursement.getREIMB_RESOLVER());
+			ps.setInt(9, reimbursement.getREIMB_STATUS_ID());
+			ps.setInt(10, reimbursement.getREIMB_TYPE_ID());
+			
+			ps.executeUpdate();
+			
+			return true;
+			
+		}catch(SQLException e) {
+			System.out.println("Add reimbursement failed");
+			e.printStackTrace();
+		}
 		return false;
 	}
 
 	@Override
 	public boolean deleteReimbursement(int id) {
-		// TODO Auto-generated method stub
+		try(Connection conn = ConnectionUtil.getConnection()){
+			
+			String sql = "DELETE FROM ers_reimbursement WHERE REIMB_ID = ?"; 
+			
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+			ps.setInt(1, id);
+
+			ps.executeUpdate();
+			
+			return true;
+			
+		}catch(SQLException e) {
+			System.out.println("Delete reimbursement failed");
+			e.printStackTrace();
+		}
 		return false;
 	}
 
