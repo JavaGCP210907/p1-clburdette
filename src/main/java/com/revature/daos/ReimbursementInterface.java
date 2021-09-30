@@ -12,5 +12,5 @@ public interface ReimbursementInterface {
 	
 	public boolean addReimbursement(Reimbursement reimbursement);
 	
-	public boolean deleteReimbursement(int id);
+	public List<Reimbursement> getReimbursementsByStatus(int id);
 }

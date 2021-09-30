@@ -135,26 +135,54 @@ public class ReimbursementDao implements ReimbursementInterface{
 		
 		return false;
 	}
-
-	@Override
-	public boolean deleteReimbursement(int id) {
+	
+	public List<Reimbursement> getReimbursementsByStatus(int id) {
 		try(Connection conn = ConnectionUtil.getConnection()){
 			
-			String sql = "DELETE FROM ers_reimbursement WHERE REIMB_ID = ?"; 
+			String sql = "SELECT * FROM ers_reimbursement"; //write out out SQL query
 			
-			PreparedStatement ps = conn.prepareStatement(sql);
+			Statement s = conn.createStatement(); //create a Statement object to execute our query
 			
-			ps.setInt(1, id);
+			ResultSet rs = s.executeQuery(sql); //put the results of the query into a ResultSet (execute the query into it)
+			
+			List<Reimbursement> reimbursementList = new ArrayList<>(); 
+			
+			//populate the ArrayList
+			while(rs.next()) {
+				
 
-			ps.executeUpdate();
+				Reimbursement r = new Reimbursement (
+					rs.getInt("REIMB_ID"),
+					rs.getDouble("REIMB_AMOUNT"),
+					rs.getDate("REIMB_SUBMITTED"),
+					rs.getDate("REIMB_RESOLVED"),
+					rs.getString("REIMB_DESCRIPTION"),
+					rs.getString("REIMB_RECEIPT"),
+					rs.getInt("REIMB_AUTHOR"),
+					rs.getInt("REIMB_RESOLVER"),
+					rs.getInt("REIMB_STATUS_ID"),
+					rs.getInt("REIMB_TYPE_ID")
+				);
+				
+
+				reimbursementList.add(r);
+			}
 			
-			return true;
 			
-		}catch(SQLException e) {
-			System.out.println("Delete reimbursement failed");
+			return reimbursementList;
+			
+		} catch (SQLException e) {
+			System.out.println("Get all reimbursements failed");
 			e.printStackTrace();
 		}
-		return false;
+		
+		
+		
+		return null;
 	}
+	
+	
+
+
 
 }

@@ -39,7 +39,9 @@ public class Launcher {
 		//app.get("/users", ac.getAllUsers);
 
 		app.post("/reimbursements", rc.ReimbursementHandler);
-		app.get("/reimbursements", rc.getAllReimbursements);
+		app.get("/reimbursements", rc.getAllReimbursementsHandler);
+		
+		app.get("/user", uc.getUserHandler);
 		
 		//imagine we have users 
 		//Send a POST request to validate user login credentials

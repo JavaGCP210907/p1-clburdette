@@ -1,0 +1,18 @@
+login 		- splash screen start span "Employee Reimbursement System
+		- right third login. username field above password, login button at the bottom.  
+		- left 2/3 is corporate name and logo
+		- one successful login, service returns package with employee first name and role(employee or manager)
+
+employee	- new page. text to signify employee view 
+		- below span two button options. 1 for view tickets. 2 for add request ticket.
+		- field below buttons displays option fields.
+		- clicking ticket in view ticket list shows ticket view.
+		- request ticket similar to ticket view with fields. submit button below.
+		- logout returns to login page
+
+manager		- new page. text to signify finance manager view
+		- all reimbursements display onload. 
+		- clicking ticket in ticket list shows ticket view. 3 buttons below to filter by status(pending/approved/denied)
+		- possible option on pending list to approve/deny by checkbox.
+		- tickets that are pending will display approve and deny buttons below
+		- logout returns to login page 

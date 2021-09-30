@@ -8,7 +8,7 @@ public class UserController {
 
 	UserService us = new UserService(); 
 
-	public Handler getUser = (ctx) -> {
+	public Handler getUserHandler = (ctx) -> {
 		
 		if(ctx.req.getSession(false) != null) {
 			
@@ -21,7 +21,7 @@ public class UserController {
 		ctx.status(200); //200 = OK (success)
 		
 		} else {
-			ctx.status(403); //forbidden status code 
+			ctx.status(500); //forbidden status code 
 		}
 		
 	};

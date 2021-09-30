@@ -27,10 +27,6 @@ public class LoginController {
 		
 		if(ls.login(LDTO.getUsername(), LDTO.getPassword())) { //if login is successful...
 			
-			UserDao uDao = new UserDao();
-			User user = uDao.getUserByUserName(LDTO.getUsername());
-			String userToClient = user.toString();
-			
 			//generate a JSON Web Token to uniquely identify the user
 			String jwt = JwtUtil.generate(LDTO.getUsername(), LDTO.getPassword());
 			

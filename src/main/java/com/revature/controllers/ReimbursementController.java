@@ -11,7 +11,7 @@ import io.javalin.http.Handler;
 public class ReimbursementController {
 	ReimbursementService rs = new ReimbursementService(); 
 
-	public Handler getAllReimbursements = (ctx) -> {
+	public Handler getAllReimbursementsHandler = (ctx) -> {
 		
 		if(ctx.req.getSession(false) != null) { //if a session exists...
 		
@@ -37,4 +37,5 @@ public class ReimbursementController {
 		
 		
 	};
+
 }
