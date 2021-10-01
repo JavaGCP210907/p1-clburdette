@@ -22,9 +22,9 @@ public class ConnectionUtil {
 		//Hardcoded for now... BAD! we'll change this later to hide them in the Environment Variables
 		
 		//I'm going to put the credentials in Strings, and use those strings in a method that gets connections
-		String url = "";
-		String username = "";
-		String password = "";
+		String url = System.getenv("URL");
+		String username = System.getenv("USER");
+		String password = System.getenv("PASSWORD");
 		
 		//This return statement is what returns out actual database Connection object
 		//Note how this getConnection() method has a return type of Connection

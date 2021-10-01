@@ -13,4 +13,6 @@ public interface ReimbursementInterface {
 	public boolean addReimbursement(Reimbursement reimbursement);
 	
 	public List<Reimbursement> getReimbursementsByStatus(int id);
+	
+	public void updateReimbursementStatus(int id, int status);
 }

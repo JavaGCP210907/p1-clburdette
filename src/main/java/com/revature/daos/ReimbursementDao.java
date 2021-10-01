@@ -139,11 +139,13 @@ public class ReimbursementDao implements ReimbursementInterface{
 	public List<Reimbursement> getReimbursementsByStatus(int id) {
 		try(Connection conn = ConnectionUtil.getConnection()){
 			
-			String sql = "SELECT * FROM ers_reimbursement"; //write out out SQL query
+			String sql = "SELECT * FROM ers_reimbursement WHERE reimb_status_id = ?"; //write out out SQL query
 			
-			Statement s = conn.createStatement(); //create a Statement object to execute our query
+			PreparedStatement ps = conn.prepareStatement(sql);
 			
-			ResultSet rs = s.executeQuery(sql); //put the results of the query into a ResultSet (execute the query into it)
+			ps.setInt(1, id);//create a Statement object to execute our query
+			
+			ResultSet rs = ps.executeQuery(sql); //put the results of the query into a ResultSet (execute the query into it)
 			
 			List<Reimbursement> reimbursementList = new ArrayList<>(); 
 			
@@ -172,7 +174,7 @@ public class ReimbursementDao implements ReimbursementInterface{
 			return reimbursementList;
 			
 		} catch (SQLException e) {
-			System.out.println("Get all reimbursements failed");
+			System.out.println("Get reimbursements by status failed");
 			e.printStackTrace();
 		}
 		
@@ -180,9 +182,26 @@ public class ReimbursementDao implements ReimbursementInterface{
 		
 		return null;
 	}
+
+	@Override
+	public void updateReimbursementStatus(int id, int status) {
+
+		try(Connection conn = ConnectionUtil.getConnection()){
+			
+			String sql = "UPDATE ers_reimbursement " +
+					   	 "SET reimb_status_id = ? " +
+					   	 "WHERE reimb_id = ?"; //write out out SQL query
+			
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+			ps.setInt(1, status);
+			ps.setInt(1, id);//create a Statement object to execute our query
+			
+			ps.executeUpdate(sql);
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	
-	
-
-
-
 }
