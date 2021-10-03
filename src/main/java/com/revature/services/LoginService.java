@@ -1,15 +1,14 @@
 package com.revature.services;
 
+import com.revature.models.LoginDTO;
+import com.revature.models.User;
+
 public class LoginService {
 
-	public boolean login(String username, String password) {
-		//temp hardcoded check. replace with real validation of UN and PW
-		if(username.equals("admin") && password.equals("admin")) {
-			return true;
-		}
-		
-		return false;
-		
+	public User getUserByLogin(LoginDTO LDTO) {
+		UserService us = new UserService();
+		User user = us.checkUserForLogin(LDTO);
+		return user;
 	}
 	
 }

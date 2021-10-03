@@ -10,12 +10,13 @@ public class JwtUtil {
     private static final Algorithm algorithm = Algorithm.HMAC256(secret);
 
     // put in the parameters that you want to be in the body of your jwt,
-    public static String generate(String username, String password){
+    public static String generate(String USER_FIRST_NAME, String USER_LAST_NAME, int USER_ROLE_ID){
 
         // builder design pattern
         String token = JWT.create()
-                .withClaim("username", username) // add data to the payload
-                .withClaim("password", password)
+                .withClaim("USER_FIRST_NAME", USER_FIRST_NAME) // add data to the payload
+                .withClaim("USER_LAST_NAME", USER_LAST_NAME)
+                .withClaim("USER_ROLE_ID", USER_ROLE_ID)
                 .sign(algorithm); // this will generate a signature based off of those claims
 
         return  token;
