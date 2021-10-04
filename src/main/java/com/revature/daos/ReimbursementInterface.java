@@ -15,4 +15,6 @@ public interface ReimbursementInterface {
 	public List<Reimbursement> getReimbursementsByStatus(int id);
 	
 	public void updateReimbursementStatus(int id, int status);
+	
+	public List<Reimbursement> getReimbursementByUserId(int id);
 }

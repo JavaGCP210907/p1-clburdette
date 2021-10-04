@@ -63,7 +63,7 @@ public class ReimbursementDao implements ReimbursementInterface{
 	public Reimbursement getReimbursementById(int id) {
 		try(Connection conn = ConnectionUtil.getConnection()){
 			
-			String sql = "SELECT * FROM ers_reimbursement WHERE id = ?"; //write out out SQL query
+			String sql = "SELECT * FROM ers_reimbursement WHERE reimb_id = ?"; //write out out SQL query
 			
 			PreparedStatement ps = conn.prepareStatement(sql);
 			
@@ -202,6 +202,51 @@ public class ReimbursementDao implements ReimbursementInterface{
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public List<Reimbursement> getReimbursementByUserId(int id) {
+		try(Connection conn = ConnectionUtil.getConnection()){
+			
+			String sql = "SELECT * FROM ers_reimbursement WHERE reimb_author = ?"; //write out out SQL query
+			
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+			ps.setInt(1, id);//create a Statement object to execute our query
+			
+			ResultSet rs = ps.executeQuery(); //put the results of the query into a ResultSet (execute the query into it)
+			
+			List<Reimbursement> reimbursementList = new ArrayList<>();
+			
+			while(rs.next()) {
+				
+
+				Reimbursement r = new Reimbursement (
+					rs.getInt("REIMB_ID"),
+					rs.getDouble("REIMB_AMOUNT"),
+					rs.getDate("REIMB_SUBMITTED"),
+					rs.getDate("REIMB_RESOLVED"),
+					rs.getString("REIMB_DESCRIPTION"),
+					rs.getString("REIMB_RECEIPT"),
+					rs.getInt("REIMB_AUTHOR"),
+					rs.getInt("REIMB_RESOLVER"),
+					rs.getInt("REIMB_STATUS_ID"),
+					rs.getInt("REIMB_TYPE_ID")
+				);
+				
+				
+
+				reimbursementList.add(r);
+			}
+			
+			
+			return reimbursementList;
+			
+		}catch(SQLException e) {
+			System.out.println("Get reimbursement by id failed");
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 }

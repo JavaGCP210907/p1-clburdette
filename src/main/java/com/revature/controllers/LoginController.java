@@ -30,9 +30,9 @@ public class LoginController {
 			
 			//generate a JSON Web Token to uniquely identify the user
 			
-			UserDTO UDTO = gson.fromJson(checkedUser.toString(), UserDTO.class);
+			//UserDTO UDTO = gson.fromJson(checkedUser.toString(), UserDTO.class);
 			
-			String jwt = JwtUtil.generate(UDTO.getUSER_FIRST_NAME(), UDTO.getUSER_LAST_NAME(), UDTO.getUSER_ROLE_ID());
+			//String jwt = JwtUtil.generate(UDTO.getUSER_FIRST_NAME(), UDTO.getUSER_LAST_NAME(), UDTO.getUSER_ROLE_ID());
 			
 			//create a user session
 			ctx.req.getSession(); //req is a "Request Object", we establish sessions through it
@@ -41,7 +41,7 @@ public class LoginController {
 
 			ctx.status(200);
 			
-			ctx.result("Login Success! JWT is: " + jwt);
+			ctx.result(checkedUser.toString());
 			
 		} else { //if login fails...
 			

@@ -40,7 +40,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "{'USER_FIRST_NAME' :" + USER_FIRST_NAME + ", 'USER_LAST_NAME' :" + USER_LAST_NAME + ", 'USER_ROLE_ID' :" + USER_ROLE_ID + "}";
+		return "{'USER_ID' :" + ERS_USERS_ID + ", 'USER_FIRST_NAME' :" + USER_FIRST_NAME + ", 'USER_LAST_NAME' :" + USER_LAST_NAME + ", 'USER_ROLE_ID' :" + USER_ROLE_ID + "}";
 	}
 
 	@Override
