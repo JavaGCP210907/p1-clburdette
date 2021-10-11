@@ -12,7 +12,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.revature.models.ReimbDTO;
-import com.revature.models.Reimbursement;
 import com.revature.models.reimbReturnDTO;
 import com.revature.models.reimbUpdateDTO;
 import com.revature.utils.ConnectionUtil;
@@ -20,50 +19,6 @@ import com.revature.utils.ConnectionUtil;
 public class ReimbursementDao implements ReimbursementInterface{
 	
 	Logger log = LogManager.getLogger(ReimbursementDao.class);
-	@Override
-	public List<Reimbursement> getAllReimbursements() {
-		try(Connection conn = ConnectionUtil.getConnection()){
-			
-			String sql = "SELECT * FROM ers_reimbursement"; //write out out SQL query
-			
-			Statement s = conn.createStatement(); //create a Statement object to execute our query
-			
-			ResultSet rs = s.executeQuery(sql); //put the results of the query into a ResultSet (execute the query into it)
-			
-			List<Reimbursement> reimbursementList = new ArrayList<>(); 
-			
-			//populate the ArrayList
-			while(rs.next()) {
-				
-
-				Reimbursement r = new Reimbursement (
-					rs.getInt("REIMB_ID"),
-					rs.getDouble("REIMB_AMOUNT"),
-					rs.getTimestamp("REIMB_SUBMITTED"),
-					rs.getTimestamp("REIMB_RESOLVED"),
-					rs.getString("REIMB_DESCRIPTION"),
-					rs.getInt("REIMB_AUTHOR"),
-					rs.getInt("REIMB_RESOLVER"),
-					rs.getInt("REIMB_STATUS_ID"),
-					rs.getInt("REIMB_TYPE_ID")
-				);
-				
-
-				reimbursementList.add(r);
-			}
-			
-			
-			return reimbursementList;
-			
-		} catch (SQLException e) {
-			System.out.println("Get all reimbursements failed");
-			e.printStackTrace();
-		}
-		
-		
-		
-		return null;
-	}
 
 	@Override
 	public reimbReturnDTO getReimbById(int id) {
@@ -125,6 +80,7 @@ public class ReimbursementDao implements ReimbursementInterface{
 
 	@Override
 	public boolean addReimbursement(ReimbDTO rdto) {
+		
 		try(Connection conn = ConnectionUtil.getConnection()){
 			
 			String sql = "INSERT INTO ers_reimbursement" +

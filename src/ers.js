@@ -1,5 +1,5 @@
 const url ="http://localhost:8090/";
-
+//element variables
 let headerDiv = document.getElementById("headerDiv");
 let loginDiv = document.getElementById("loginDiv");
 let submitDiv = document.getElementById("submitDiv");
@@ -32,7 +32,9 @@ let selectStatus = document.getElementById("selectStatus");
 let approveButton = document.getElementById("approveButton");
 let denyButton = document.getElementById("denyButton");
 let returnToManagerListButton = document.getElementById("returnToManagerListButton");
+
 console.log("variables assigned");
+//globals for continuity between views
 let currentTicket = {};
 
 let USER_ID;
@@ -40,12 +42,11 @@ let USER_FIRST_NAME;
 let USER_LAST_NAME;
 let USER_ROLE_ID;
 
-let greeted = false;
-
+let currentManagerSelect = 1;
 
 init();
 
-function init(){
+function init(){ //initialize handlers and ready the page for first view
     logoutButton.addEventListener('click', logout);
     loginButton.addEventListener('click', login);
     submitReimbursementButton.addEventListener('click', submitReimbursement);
@@ -55,16 +56,17 @@ function init(){
     selectStatus.addEventListener('change', changeStatus);
     approveButton.addEventListener('click', setStatus.bind(this,2));
     denyButton.addEventListener('click', setStatus.bind(this,3));
-    returnToManagerListButton.addEventListener('click', viewManagerTickets);
+    returnToManagerListButton.addEventListener('click', viewManagerTickets.bind(this,currentManagerSelect));
     console.log("listeners added");
 
     loginMessage.innerHTML="";
+    selectStatus.selectedIndex = 0;
     resetDivs();
     headerDiv.style.display = "none";
     loginDiv.style.display = "block";
     console.log("init complete");
 }
-
+//reset all divs for next page view
 function resetDivs(){
     loginDiv.style.display = "none";
     submitDiv.style.display = "none";
@@ -73,7 +75,7 @@ function resetDivs(){
     managerDiv.style.display = "none";
     managerTicketDiv.style.display = "none";
 }
-
+//actions taken when login is successful
 function handleSuccessfulLoginReturn(info){
     USER_ID = info.ERS_USERS_ID;
     USER_FIRST_NAME = info.USER_FIRST_NAME;
@@ -84,13 +86,13 @@ function handleSuccessfulLoginReturn(info){
     loginMessage.innerHTML="";
     loggedInUserName.innerHTML = "Welcome, " + USER_FIRST_NAME + " " + USER_LAST_NAME;
     headerDiv.style.display = "block";
-    if(USER_ROLE_ID == 1){
-        viewManagerTickets();
+    if(USER_ROLE_ID == 1){//separates app access based on user role: manager or employee
+        viewManagerTickets(currentManagerSelect);
     }else{
         createTicket();
     }
 }
-
+//resets app on logout
 function logout(){
 
     USER_ID = null;
@@ -104,15 +106,15 @@ function logout(){
     loggedInUserName.innerHTML = "";
     loginMessage.innerHTML="You have logged out";
     loginDiv.style.display = "block";
+
 }
-
-
+//post method to check if user login is valid against the db
 async function login(){
 
-    console.log("login function accessed");
+
     let usern = usernameF.value;
     let userp = passwordF.value;
-    console.log("values added to package");
+
     let package = {
         username : usern,
         password : userp
@@ -121,38 +123,42 @@ async function login(){
     let response = await fetch(url + "login", {
 
         method: "POST",
-        //headers: "'Content-Type': 'application/json'",
         body: JSON.stringify(package),
         credentials: "include"
 
     } );
 
-    console.log(response.statusText);
-
     if(response.status === 200){
 
         const userInfo = await response.json();
         handleSuccessfulLoginReturn(userInfo);
-        console.log("good response");
 
     }else{
 
         loginMessage.innerHTML="username and/or password incorrect";
-        console.log("bad response");
+
     }
 
 }
-
-
-async function viewManagerTickets(){
+//manager landing view of groups of reimbursements sorted by type
+async function viewManagerTickets(index){
 
     resetDivs();
     managerDiv.style.display = "block";
     currentTicket = {};
 
-    selectStatus.selectedIndex = 0;
-
-    let response = await fetch(url + "reimbursements",{credentials: "include"});
+    let response;
+    if(currentManagerSelect == 1){
+            response = await fetch(url + "reimbursements",{
+                method: "GET",
+                credentials: "include"
+            });
+    }else{
+            response = await fetch(url + "reimbursements/status/" + (currentManagerSelect - 1),{
+                method: "GET",
+                credentials: "include"
+            });
+    }
 
     if(response.status === 200){
 
@@ -165,23 +171,22 @@ async function viewManagerTickets(){
         
         console.log("get REIMBs fail");
         resetDivs();
-        submitDiv.style.display = "block";
+        managerDiv.style.display = "block";
         subMessage.innerText = "error. please try again.";
+
     }
 }
-
+//landing method for employees. new ticket submission view, gateway to view all tickets for logged in employee
 function createTicket(){
+
     document.getElementById("employeeBody").innerHTML="";
     resetDivs();
     submitDiv.style.display = "block";
-    if(!greeted){
-        greeted = true;
-    }
     amountInput.value = null;
     descriptionInput.value = null;
     subMessage.innerText = "";
 }
-
+//sends new reimbursement to db on submitReimbursementButton press
 async function submitReimbursement(){
 
     let submitReInfo = {};
@@ -197,7 +202,7 @@ async function submitReimbursement(){
     });
     
     if(response.ok){
-
+        //resets form on successful submission
         subMessage.innerText = "submission successful";
         amountInput.value = null;
         descriptionInput.value = null;
@@ -205,8 +210,9 @@ async function submitReimbursement(){
     }else{
         subMessage.innerText = "error. please try again.";
     }
-}
 
+}
+//view of all tickets for logged in employee
 async function viewTickets(){
 
     resetDivs();
@@ -223,7 +229,7 @@ async function viewTickets(){
         displayReimbursements(employeeViewReimbursements, "employeeBody");
         newTicketButton.style.display = "block";
 
-    }else{
+    }else{//back to employee submit view on server fail
         
         console.log("get REIMBs fail");
         resetDivs();
@@ -231,13 +237,15 @@ async function viewTickets(){
         subMessage.innerText = "error. please try again.";
     }
 }
-
+//gets sorted info from db by status based on current value of the selectStatus select box
 async function changeStatus(){
     
     let statusChange = parseInt(selectStatus.value);
+    currentManagerSelect = statusChange;
     selectStatus.disabled = true;
     console.log(statusChange);
     let response;
+
     if(statusChange == 1){
             response = await fetch(url + "reimbursements",{
                 method: "GET",
@@ -260,15 +268,16 @@ async function changeStatus(){
     }else{
 
         resetDivs();
-        submitDiv.style.display = "block";
+        managerDiv.style.display = "block";
         subMessage.innerText = "error. please try again.";
 
     }
     selectStatus.disabled = false;
 }
-
+//manager view of a singular ticket with options to approve or deny if
+//ticket is pending
 async function viewManagerTicket(id){
-    console.log(id);
+
     document.getElementById("managerBody").innerHTML="";
     resetDivs();
     managerTicketDiv.style.display = "block";
@@ -281,19 +290,27 @@ async function viewManagerTicket(id){
         method: "GET",
         credentials: "include"
     });
+
     if(response.ok){
 
         const selectedTicket = await response.json();
         currentTicket = selectedTicket;
         console.log(selectedTicket);
+        
         if(currentTicket.REIMB_RESOLVER != undefined){
+
             await getResolver(selectedTicket.REIMB_RESOLVER);
+
         }
+
         populateManagerTicket(currentTicket);
+
         if(selectedTicket.REIMB_STATUS_ID == "pending"){
+        
             approveButton.style.display = "block";
             denyButton.style.display = "block";
         }
+
     }else{
         
         resetDivs();
@@ -301,8 +318,9 @@ async function viewManagerTicket(id){
 
     }
 }
-
+//employee view of singular ticket with button to return to employee ticket list view
 async function viewEmployeeTicket(id){
+
     console.log(id);
     document.getElementById("employeeBody").innerHTML="";
     resetDivs();
@@ -311,9 +329,12 @@ async function viewEmployeeTicket(id){
     denyButton.disabled = false;
 
     let response = await fetch(url + "reimbursements/" + id,{
+
         method: "GET",
         credentials: "include"
+
     });
+
     if(response.ok){
 
         const selectedTicket = await response.json();
@@ -324,15 +345,17 @@ async function viewEmployeeTicket(id){
         }
         populateEmployeeTicket(currentTicket);
 
-    }else{
+    }else{//return to employee landing view on fail
         
         resetDivs();
         submitDiv.style.display = "block";
         subMessage.innerText = "error. please try again.";
+
     }
 }
-
+//transmits update of status of pending reimbursements to db based on button press 
 async function setStatus(id){
+
     console.log(id);
     resetDivs();
     managerTicketDiv.style.display = "block";
@@ -349,35 +372,19 @@ async function setStatus(id){
         body: JSON.stringify(updatePackage),
         credentials: "include"
     });
+
     if(response.ok){
+
         viewManagerTicket(currentTicket.REIMB_ID);
-    }else{ 
+
+    }else{
+
         resetDivs();
         submitDiv.style.display = "block";
         subMessage.innerText = "error. please try again.";
     }
 }
-
-async function setStatusDenied(){
-    resetDivs();
-    managerTicketDiv.style.display = "block";
-    approveButton.disabled = true;
-    denyButton.disabled = true;
-    currentTicket.status = "denied";
-
-    let response = await fetch(url + "reimbursements/status",{
-        method: "POST",
-        body: JSON.stringify(currentTicket),
-        credentials: "include"
-    });
-    if(response.ok){
-    }else{ 
-        resetDivs();
-        submitDiv.style.display = "block";
-        subMessage.innerText = "error. please try again.";
-    }
-}
-
+//dynamically displays reimbursement list data coming back from the db
 function displayReimbursements(reimbursements, idName){
 
     for(const reimb of reimbursements){
@@ -420,7 +427,7 @@ function displayReimbursements(reimbursements, idName){
         document.getElementById(idName).appendChild(row);
         }
 }
-
+//populates static reimbursement ticket form for manager single ticket view
 function populateManagerTicket(ticket){
     console.log(ticket);
     document.getElementById("mtID").innerHTML = "ID:  " + ticket.REIMB_ID;
@@ -445,7 +452,8 @@ function populateManagerTicket(ticket){
     document.getElementById("mtRDAT").innerHTML = "RESOLVED:  " + ticket.REIMB_RESOLVED;
     }
 }
-
+//populates static reimbursement ticket form for employee single ticket view
+//TODO refactor into single method
 function populateEmployeeTicket(ticket){
     console.log(ticket);
     document.getElementById("etID").innerHTML = "ID:  " + ticket.REIMB_ID;
@@ -470,7 +478,7 @@ function populateEmployeeTicket(ticket){
     document.getElementById("etRDAT").innerHTML = "RESOLVED:  " + ticket.REIMB_RESOLVED;
     };
 }
-
+//gets username of reimbursement resolver based on resolver id for single ticket view
 async function getResolver(id){
 
     console.log(id);

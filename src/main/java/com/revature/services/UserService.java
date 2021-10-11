@@ -9,13 +9,14 @@ public class UserService {
 	UserDao uDao = new UserDao();
 	
 	public User getUserById(int id) {
+		
 		return uDao.getUserByID(id);
 
 	}
 	
 	public User checkUserForLogin(LoginDTO LDTO) {
 
-		User user = uDao.getUserByNameAndPassword(LDTO.getUsername(),LDTO.getPassword());
+		User user = uDao.getUserByNameAndPassword(LDTO);
 
 		return user;
 	}

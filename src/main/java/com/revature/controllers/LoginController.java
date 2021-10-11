@@ -8,13 +8,13 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.revature.models.LoginDTO;
 import com.revature.models.User;
-import com.revature.services.LoginService;
+import com.revature.services.UserService;
 
 import io.javalin.http.Handler;
 
 public class LoginController {
 
-	LoginService ls = new LoginService();
+	UserService us = new UserService();
 	Logger log = LogManager.getLogger(LoginController.class);
 
 	public Handler loginHandler = (ctx) -> {
@@ -28,7 +28,7 @@ public class LoginController {
 		
 		//invoke the login() method of LoginService using the username and password in the newly created LoginDTO
 		
-		User checkedUser = ls.getUserByLogin(LDTO); 
+		User checkedUser = us.checkUserForLogin(LDTO); 
 
 		if(checkedUser != null) { //if login is successful...
 

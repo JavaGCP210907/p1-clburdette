@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.revature.models.LoginDTO;
 import com.revature.models.User;
 import com.revature.utils.ConnectionUtil;
 
@@ -102,7 +103,7 @@ public class UserDao implements UserInterface{
 	}
 
 	@Override
-	public User getUserByNameAndPassword(String ERS_USERNAME, String ERS_PASSWORD) {
+	public User getUserByNameAndPassword(LoginDTO LDTO) {
 		try(Connection conn = ConnectionUtil.getConnection()){
 
 			String sql = "SELECT * FROM ers_users WHERE ers_username = ?" +
@@ -110,8 +111,8 @@ public class UserDao implements UserInterface{
 			
 			PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			
-			ps.setString(1, ERS_USERNAME);//create a Statement object to execute our query
-			ps.setString(2, ERS_PASSWORD);
+			ps.setString(1, LDTO.getUsername());//create a Statement object to execute our query
+			ps.setString(2, LDTO.getPassword());
 
 			ResultSet rs = ps.executeQuery(); //put the results of the query into a ResultSet (execute the query into it)
 
