@@ -1,5 +1,7 @@
 package com.revature.controllers;
 
+import com.google.gson.Gson;
+import com.revature.models.User;
 import com.revature.services.UserService;
 
 import io.javalin.http.Handler;
@@ -12,11 +14,15 @@ public class UserController {
 		
 		if(ctx.req.getSession(false) != null) {
 			
-		String body = ctx.body();
+		int id = Integer.parseInt(ctx.pathParam("resolverID"));		
 		
-		String clientUserIdentifier = us.getClientUserIdentifier(body);
+		User user = us.getUserById(id);
 		
-		ctx.result(clientUserIdentifier);
+		Gson gson = new Gson();
+		
+		String JSONUser = gson.toJson(user);
+		
+		ctx.result(JSONUser);
 		
 		ctx.status(200); //200 = OK (success)
 		

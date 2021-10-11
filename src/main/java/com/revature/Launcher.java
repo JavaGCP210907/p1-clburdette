@@ -3,6 +3,9 @@ package com.revature;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.revature.controllers.LoginController;
 import com.revature.controllers.ReimbursementController;
 import com.revature.controllers.UserController;
@@ -13,14 +16,17 @@ import io.javalin.Javalin;
 public class Launcher {
 
 	public static void main(String[] args) {
+		
 		ReimbursementController rc = new ReimbursementController();//to get access to the HTTP Handlers in the controller layer
-		LoginController lc = new LoginController(); 
+		LoginController lc = new LoginController();
+		UserController uc = new UserController();
+		Logger log = LogManager.getLogger(Launcher.class);
 		
 		//testing whether our connection works...
 		try(Connection conn = ConnectionUtil.getConnection()){
-			System.out.println("hey there. old friend. you've connected to your database!");
+
 		} catch (SQLException e) {
-			System.out.println("hello old friend. your connection failed");
+			log.error("initial connection to db failed");
 			e.printStackTrace();
 		}
 		
@@ -32,14 +38,17 @@ public class Launcher {
 				}
 				).start(8090);
 		
-		//We use javalin to expose API endpoints, which HTTP can send Requests to, in order to get a Response 
 		
-
+		log.info("launcher successfully loaded and ready");
 		//app.get("/users", ac.getAllUsers);
 
 		app.post("/reimbursements", rc.addReimbursementHandler);
+		app.post("/reimbursements/status", rc.updateReimbursementHandler);
 		app.get("/reimbursements", rc.getAllReimbursementsHandler);
-		app.get("/reimbursements/userID", rc.getReimbursementsByUserIdHandler);
+		app.get("/reimbursements/:reimbID", rc.getReimbursementsByIdHandler);
+		app.get("/reimbursements/user/:userID", rc.getReimbursementsByUserIdHandler);
+		app.get("/reimbursements/status/:statusID", rc.getReimbursementsByStatusIdHandler);
+		app.get("/resolver/:resolverID" , uc.getUserHandler);
 		
 		//imagine we have users 
 		//Send a POST request to validate user login credentials
